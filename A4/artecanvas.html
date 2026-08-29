@@ -18,7 +18,12 @@
         border-radius: 10px;
         cursor: pointer;
     }
+
+    .regresar {
+        margin-top: 20px;
+    }
   </style>
+
 <script>
     var contador = 0;
     var bloquesAmostrar = 0;
@@ -69,13 +74,13 @@
         // --- FILA 7: Inicio de Tirantes del Overol ---
         d("yellow", 0, 7); d("royalblue", 1, 7); d("yellow", 2, 7); d("yellow", 3, 7); d("yellow", 4, 7); d("yellow", 5, 7); d("yellow", 6, 7); d("yellow", 7, 7); d("yellow", 8, 7); d("royalblue", 9, 7); d("yellow", 10, 7);
 
-        // --- FILA 8: Pechera del Overol y Boca (punto) ---
+        // --- FILA 8: Pechera del Overol y Boca ---
         d("yellow", 0, 8); d("yellow", 1, 8); d("royalblue", 2, 8); d("royalblue", 3, 8); d("royalblue", 4, 8); d("black", 5, 8); d("royalblue", 6, 8); d("royalblue", 7, 8); d("royalblue", 8, 8); d("yellow", 9, 8); d("yellow", 10, 8);
 
-        // --- FILA 9: Cuerpo cubierto de azul (Overol completo) ---
+        // --- FILA 9: Cuerpo cubierto de azul ---
         d("yellow", 0, 9); d("royalblue", 1, 9); d("royalblue", 2, 9); d("royalblue", 3, 9); d("royalblue", 4, 9); d("royalblue", 5, 9); d("royalblue", 6, 9); d("royalblue", 7, 9); d("royalblue", 8, 9); d("royalblue", 9, 9); d("yellow", 10, 9);
 
-        // --- FILA 10: Base del Overol y Botones ---
+        // --- FILA 10: Base del Overol ---
         d("orange", 0, 10); d("royalblue", 1, 10); d("royalblue", 2, 10); d("royalblue", 3, 10); d("royalblue", 4, 10); d("royalblue", 5, 10); d("royalblue", 6, 10); d("royalblue", 7, 10); d("royalblue", 8, 10); d("royalblue", 9, 10); d("orange", 10, 10);
 
         // --- FILA 11: Zapatos / Base ---
@@ -87,7 +92,18 @@
     };
 </script>
 </head>
+
 <body>
+
    <canvas id="micanvas" width="700" height="700"></canvas>
+
+   <br>
+
+   <div class="regresar">
+       <a href="../index.html">
+           <button>Regresar al menú</button>
+       </a>
+   </div>
+
 </body>
 </html>
