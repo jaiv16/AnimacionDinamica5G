@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Galería Interactiva</title>
+
+    <style>
+      body { 
+        text-align: center;
+        background-color: goldenrod;
+        font-family: sans-serif;
+      }
+
+      canvas {
+        background-color: white;
+        border: 2px solid royalblue;
+        margin-top: 20px;
+      }
+
+      aside {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      /* Botón para regresar al menú */
+      .boton-menu {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 25px;
+        background-color: royalblue;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+      }
+
+      .boton-menu:hover {
+        background-color: darkblue;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Galería -->
+    <canvas id="canvas" width="1000" height="800"></canvas>
+
+    <aside>
+      Presiona Q, W, E, R o T para cambiar la fotografía.
+    </aside>
+
+    <!-- Botón para regresar al menú -->
+    <a href="index.html" class="boton-menu">← Regresar al menú</a>
+
+    <script>
+      window.onload = function () {
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+
+        // Dimensiones para centrar el marco de la foto
+        var fotoX = 200;
+        var fotoY = 200;
+        var fotoAncho = 600;
+        var fotoAlto = 400;
+
+        // Objeto principal de imagen
+        var imagen = new Image();
+
+        // Rutas de las imágenes asignadas a cada tecla
+        var imagenes = {
+          'q': 'Limon1.png',
+          'w': 'Limon2.png',
+          'e': 'Limon3.png',
+          'r': 'Limon4.png',
+          't': 'Limon5.png'
+        };
+
+        // Cargar la primera imagen por defecto
+        imagen.src = imagenes['q'];
+
+        // Dibujar cuando la imagen termine de cargar
+        imagen.onload = function() {
+          draw();
+        };
+
+        function draw() {
+
+          // Limpiar el canvas
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Dibujar la imagen
+          if (imagen.complete && imagen.naturalWidth !== 0) {
+            context.drawImage(
+              imagen,
+              fotoX,
+              fotoY,
+              fotoAncho,
+              fotoAlto
+            );
+          }
+
+          // Borde alrededor de la fotografía
+          context.strokeStyle = '#333';
+          context.lineWidth = 4;
+          context.strokeRect(
+            fotoX,
+            fotoY,
+            fotoAncho,
+            fotoAlto
+          );
+        }
+
+        // Detectar las teclas presionadas
+        function onKeyboardEvent(event) {
+
+          var key = event.key.toLowerCase();
+
+          // Cambiar fotografía con Q, W, E, R o T
+          if (imagenes[key]) {
+            imagen.src = imagenes[key];
+          }
+        }
+
+        // Activar el teclado
+        window.addEventListener(
+          'keydown',
+          onKeyboardEvent,
+          false
+        );
+
+        // Render inicial
+        draw();
+      };
+    </script>
+
+  </body>
+</html>

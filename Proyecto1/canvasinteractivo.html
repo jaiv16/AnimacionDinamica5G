@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Key Codes</title>
+    <style>
+      body { 
+        text-align: center;
+        background-color: rgb(174, 226, 228);
+      }
+      canvas {
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="1000" height="800"></canvas>
+    <aside>Press arrow keys.</aside>
+    
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById("canvas");
+      var context = canvas.getContext("2d");
+
+      // Coordenadas fijas para el texto
+      var textX = 200;
+      var textY = 200;
+
+      // Coordenadas dinámicas para el cuadro
+      var boxX = 200;
+      var boxY = 200;
+      var speed = 10;
+
+      function draw() {
+        // Limpia el canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // 1. Dibuja el texto en su posición FIJA
+        context.font = '40pt Calibri';
+        context.fillStyle = 'purple';
+        context.fillText('Hello World!', textX, textY);
+
+        // 2. Dibuja el cuadro en su posición MÓVIL
+        context.fillRect(boxX, boxY, 100, 100);
+      }
+
+      draw();
+
+      function onKeyboardEvent (event) {
+        switch (event.key) {
+          case "ArrowUp":
+            boxY -= speed;
+            break;
+          case "ArrowDown":
+            boxY += speed;
+            break;
+          case "ArrowLeft":
+            boxX -= speed;
+            break;
+          case "ArrowRight":
+            boxX += speed;
+            break;
+        }
+
+        // Redibuja la escena
+        draw();
+      }
+
+      window.addEventListener('keydown', onKeyboardEvent, false);
+    };
+    </script>
+  </body>
+</html>
