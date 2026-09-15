@@ -1,83 +1,93 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menú de Actividades - Animación Dinámica 5G</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background-color: #fdf5e6; /* Fondo beige claro */
-      font-family: Arial, Helvetica, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+    <meta charset="utf-8">
+    <title>Menú de Actividades</title>
 
-    h1 {
-      color: #e07a5f;
-      font-size: 2.2rem;
-      margin-bottom: 5px;
-    }
+    <style>
+        body {
+            background-color: cornsilk;
+            text-align: center;
+            font-family: Verdana;
+        }
 
-    h2 {
-      color: #3d5a80;
-      font-size: 1.5rem;
-      margin-top: 0;
-      margin-bottom: 30px;
-    }
+        h1 {
+            color: coral;
+        }
 
-    .menu-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 90%;
-      max-width: 400px;
-    }
+        h2 {
+            color: royalblue;
+        }
 
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 15px 0;
-      background-color: #ffffff;
-      color: #3d5a80;
-      border: 2px solid #e07a5f;
-      border-radius: 12px;
-      text-align: center;
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: bold;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      transition: all 0.2s ease-in-out;
-      box-sizing: border-box;
-    }
+        .menu {
+            margin: 30px auto;
+            width: 500px;
+        }
 
-    .btn:hover {
-      background-color: #e07a5f;
-      color: #ffffff;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-  </style>
+        .actividad {
+            background-color: white;
+            border: 2px solid coral;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 10px;
+        }
+
+        .actividad a {
+            color: royalblue;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .actividad a:hover {
+            color: coral;
+        }
+    </style>
 </head>
+
 <body>
 
-  <h1>Menú de Actividades</h1>
-  <h2>Animación Dinámica 5G</h2>
+    <h1>Menú de Actividades</h1>
 
-  <div class="menu-container">
-    <a href="actividad2.html" class="btn">Actividad 2 - Página básica</a>
-    <a href="actividad3.html" class="btn">Actividad 3 - Golden Globes</a>
-    <a href="actividad4.html" class="btn">Actividad 4 - Arte en Canvas</a>
-    <a href="reto.html" class="btn">Reto Canvas</a>
-    <a href="rotaciónmouse.html" class="btn">Rotación al Mouse</a>
-    <a href="proyecto.html" class="btn">Proyecto Interactivo</a>
-  </div>
+    <h2>Animación Dinámica5G</h2>
 
-</body>
-</html>
+    <div class="menu">
+
+        <!-- Actividad 2 -->
+        <div class="actividad">
+            <a href="A2/paginabasica.html">
+                Actividad 2 - Página básica
+            </a>
+        </div>
+
+        <!-- Actividad 3 -->
+        <div class="actividad">
+            <a href="A3/goldenglobes.html">
+                Actividad 3 - Golden Globes
+            </a>
+        </div>
+
+        <!-- Actividad 4 -->
+        <div class="actividad">
+            <a href="A4/artecanvas.html">
+                Actividad 4 - Arte en Canvas
+            </a>
+        </div>
+
+        <!-- Reto Canvas -->
+        <div class="actividad">
+            <a href="P2/reto-canvas.html.html">
+                Reto Canvas
+            </a>
+        </div>
+
+        <!-- Proyecto Interactivo -->
+        <div class="actividad">
+            <a href="Proyecto1/proyectointeractivo.html">
+                Proyecto Interactivo
+            </a>
+        </div>
+
+    </div>
+
 </body>
 </html>
