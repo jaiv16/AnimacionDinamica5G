@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Rotación del Arco hacia el Mouse</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      font-family: sans-serif;
+    }
+
+    canvas {
+      background-color: #2a2a2a;
+      border: 2px solid #555;
+      border-radius: 8px;
+      cursor: crosshair;
+    }
+
+    aside {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="canvas" width="600" height="600"></canvas>
+  <aside>Mueve el cursor dentro del recuadro para apuntar con el arco.</aside>
+
+  <script>
+    window.onload = function () {
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+      
+      const mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+
+      // Cargar la imagen del arco
+      const bowImage = new Image();
+      bowImage.src = 'arco.png';
+
+      // Capturar movimiento del mouse relativo al canvas
+      canvas.addEventListener('mousemove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+      });
+
+      // Posición fija del arco en el centro del canvas
+      const bowX = canvas.width / 2;
+      const bowY = canvas.height / 2;
+
+      function drawFrame() {
+        window.requestAnimationFrame(drawFrame);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Distancias X e Y entre el arco y el mouse
+        const dx = mouse.x - bowX;
+        const dy = mouse.y - bowY;
+
+        // Ángulo de rotación usando atan2
+        const rotation = Math.atan2(dy, dx);
+
+        // Renderizar la imagen
+        context.save();
+        context.translate(bowX, bowY);
+        context.rotate(rotation);
+
+        // Aumentamos el tamaño del arco aquí (ancho y alto)
+        const width = 220;  // Modifica este valor si lo quieres aún más grande
+        const height = 220; // Modifica este valor si lo quieres aún más grande
+
+        // Dibujar la imagen centrada sobre su eje
+        context.drawImage(bowImage, -width / 2, -height / 2, width, height);
+
+        context.restore();
+      }
+
+      // Iniciar animación cuando la imagen termine de cargar
+      bowImage.onload = function() {
+        drawFrame();
+      };
+    };
+  </script>
+</body>
+</html>
