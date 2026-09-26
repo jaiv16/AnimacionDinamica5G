@@ -25,7 +25,7 @@
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
-  // 1. Cargar las tres imágenes necesarias
+  // 1. Cargar imágenes
   const bgImg = new Image();
   bgImg.src = 'Fondo.jpg';
 
@@ -35,17 +35,16 @@
   const fantasmaImg = new Image();
   fantasmaImg.src = 'fantasma.png';
 
-  // Variable para definir qué personaje mostrar actual
   let currentImg = pcmanImg;
 
-  // Configuración del objeto y la Onda Senoidal
+  // Configuración del objeto
   const character = {
-    x: -70,           // Inicia fuera de la pantalla por la izquierda
-    baseY: 225,       // Centro vertical del movimiento
+    x: 0,             // Inicia en el borde izquierdo
+    baseY: 200,       // Centro vertical de la pantalla
     width: 70,
     height: 70,
-    speedX: 2,        // Velocidad horizontal
-    amplitude: 40,    // Qué tanto sube y baja
+    speedX: 3,        // Velocidad de movimiento horizontal
+    amplitude: 40,    // Amplitud de la onda senoidal
     frequency: 0.03   // Frecuencia de la onda senoidal
   };
 
@@ -53,7 +52,6 @@
 
   function checkLoaded() {
     loadedImages++;
-    // Esperamos a que las 3 imágenes se hayan cargado
     if (loadedImages === 3) {
       animate();
     }
@@ -63,40 +61,50 @@
   pcmanImg.onload = checkLoaded;
   fantasmaImg.onload = checkLoaded;
 
-  // Escuchar el evento de la barra espaciadora
+  // Cambiar personaje al presionar la barra espaciadora
   window.addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
-      // Previene que la página haga scroll al presionar la barra espaciadora
-      event.preventDefault(); 
-      
-      // Alternar entre pcman y fantasma
-      if (currentImg === pcmanImg) {
-        currentImg = fantasmaImg;
-      } else {
-        currentImg = pcmanImg;
-      }
+      event.preventDefault(); // Evita el scroll de la ventana
+      currentImg = (currentImg === pcmanImg) ? fantasmaImg : pcmanImg;
     }
   });
 
   function animate() {
-    // 1. Dibujar el fondo
+    // 1. Dibujar imagen de fondo
     ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
-    // 2. Cálculo de la posición Y mediante la Onda Senoidal
+    // 2. Dibujar el texto centrado en la parte inferior (abajo)
+    ctx.font = 'bold 22px Arial';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    
+    // Sombra de fondo para destacar el texto sobre el fondo
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+    ctx.shadowBlur = 6;
+    
+    // canvas.height - 25 ubica el texto cerca del borde inferior
+    ctx.fillText('Aplastá tu barra espaciadora', canvas.width / 2, canvas.height - 25);
+    ctx.shadowBlur = 0; // Resetear sombra para que no afecte a las imágenes
+
+    // 3. Cálculo de la Onda Senoidal
     const currentY = character.baseY + Math.sin(character.x * character.frequency) * character.amplitude;
 
-    // 3. Dibujar la imagen activa actualmente (pcman o fantasma)
+    // 4. Dibujar al personaje activo
     ctx.drawImage(currentImg, character.x, currentY, character.width, character.height);
 
-    // 4. Avance horizontal
+    // 5. Mover horizontalmente
     character.x += character.speedX;
 
-    // 5. Reiniciar recorrido al salir por el lado derecho
-    if (character.x > canvas.width) {
-      character.x = -character.width;
+    // 6. CONTROL DE REBOTE EN BORDES
+    if (character.x + character.width >= canvas.width) {
+      character.x = canvas.width - character.width;
+      character.speedX *= -1; // Invierte dirección
+    } else if (character.x <= 0) {
+      character.x = 0;
+      character.speedX *= -1; // Invierte dirección
     }
 
-    // 6. Siguiente fotograma de animación
+    // 7. Próximo fotograma
     requestAnimationFrame(animate);
   }
 </script>
