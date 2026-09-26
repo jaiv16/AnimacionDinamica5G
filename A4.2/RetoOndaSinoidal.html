@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reto onda sinoidal</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      border: 2px solid #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="800" height="450"></canvas>
+
+<script>
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // 1. Cargar las tres imágenes necesarias
+  const bgImg = new Image();
+  bgImg.src = 'Fondo.jpg';
+
+  const pcmanImg = new Image();
+  pcmanImg.src = 'pcman.png';
+
+  const fantasmaImg = new Image();
+  fantasmaImg.src = 'fantasma.png';
+
+  // Variable para definir qué personaje mostrar actual
+  let currentImg = pcmanImg;
+
+  // Configuración del objeto y la Onda Senoidal
+  const character = {
+    x: -70,           // Inicia fuera de la pantalla por la izquierda
+    baseY: 225,       // Centro vertical del movimiento
+    width: 70,
+    height: 70,
+    speedX: 2,        // Velocidad horizontal
+    amplitude: 40,    // Qué tanto sube y baja
+    frequency: 0.03   // Frecuencia de la onda senoidal
+  };
+
+  let loadedImages = 0;
+
+  function checkLoaded() {
+    loadedImages++;
+    // Esperamos a que las 3 imágenes se hayan cargado
+    if (loadedImages === 3) {
+      animate();
+    }
+  }
+
+  bgImg.onload = checkLoaded;
+  pcmanImg.onload = checkLoaded;
+  fantasmaImg.onload = checkLoaded;
+
+  // Escuchar el evento de la barra espaciadora
+  window.addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+      // Previene que la página haga scroll al presionar la barra espaciadora
+      event.preventDefault(); 
+      
+      // Alternar entre pcman y fantasma
+      if (currentImg === pcmanImg) {
+        currentImg = fantasmaImg;
+      } else {
+        currentImg = pcmanImg;
+      }
+    }
+  });
+
+  function animate() {
+    // 1. Dibujar el fondo
+    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+
+    // 2. Cálculo de la posición Y mediante la Onda Senoidal
+    const currentY = character.baseY + Math.sin(character.x * character.frequency) * character.amplitude;
+
+    // 3. Dibujar la imagen activa actualmente (pcman o fantasma)
+    ctx.drawImage(currentImg, character.x, currentY, character.width, character.height);
+
+    // 4. Avance horizontal
+    character.x += character.speedX;
+
+    // 5. Reiniciar recorrido al salir por el lado derecho
+    if (character.x > canvas.width) {
+      character.x = -character.width;
+    }
+
+    // 6. Siguiente fotograma de animación
+    requestAnimationFrame(animate);
+  }
+</script>
+
+</body>
+</html>
