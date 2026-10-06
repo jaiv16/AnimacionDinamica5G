@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Paint Interactivo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: coral;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 15px;
+      font-size: 28px;
+    }
+
+    /* Panel de Control */
+    .controls {
+      background-color: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .group-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Botones de Colores */
+    .color-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .color-btn.active {
+      transform: scale(1.2);
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+
+    .color-picker {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    /* Botones de Grosor */
+    .size-btn {
+      background-color: #334155;
+      color: #ffffff;
+      border: 2px solid transparent;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .size-btn:hover {
+      background-color: #475569;
+    }
+
+    .size-btn.active {
+      background-color: #0284c7;
+      border-color: #38bdf8;
+    }
+
+    /* Botones de Acción */
+    .action-btn {
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .btn-clear {
+      background-color: #dc2626;
+    }
+    .btn-clear:hover { background-color: #ef4444; }
+
+    .btn-save {
+      background-color: #16a34a;
+    }
+    .btn-save:hover { background-color: #22c55e; }
+
+    /* Lienzo / Canvas */
+    .canvas-container {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      background-color: #ffffff;
+      cursor: crosshair;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎨 Mi Paint Interactivo</h1>
+
+  <div class="controls">
+    <!-- Colores -->
+    <div class="group">
+      <span class="group-label">Colores</span>
+      <div class="btn-row">
+        <button class="color-btn active" style="background-color: #000000;" onclick="setColor('#000000', this)"></button>
+        <button class="color-btn" style="background-color: #dc2626;" onclick="setColor('#dc2626', this)"></button>
+        <button class="color-btn" style="background-color: #16a34a;" onclick="setColor('#16a34a', this)"></button>
+        <button class="color-btn" style="background-color: #2563eb;" onclick="setColor('#2563eb', this)"></button>
+        <button class="color-btn" style="background-color: #eab308;" onclick="setColor('#eab308', this)"></button>
+        <button class="color-btn" style="background-color: #9333ea;" onclick="setColor('#9333ea', this)"></button>
+        <input type="color" class="color-picker" id="customColor" value="#000000" onchange="setCustomColor(this.value)">
+      </div>
+    </div>
+
+    <!-- Grosores -->
+    <div class="group">
+      <span class="group-label">Grosor</span>
+      <div class="btn-row">
+        <button class="size-btn" onclick="setSize(3, this)">Delgado (3px)</button>
+        <button class="size-btn active" onclick="setSize(8, this)">Medio (8px)</button>
+        <button class="size-btn" onclick="setSize(15, this)">Grueso (15px)</button>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="group">
+      <span class="group-label">Acciones</span>
+      <div class="btn-row">
+        <button class="action-btn btn-clear" onclick="clearCanvas()">Borrar Todo</button>
+        <button class="action-btn btn-save" onclick="saveCanvas()">Guardar PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="canvas" width="900" height="500"></canvas>
+  </div>
+
+  <script>
+    // Variables de Estado
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let isDrawing = false;
+    let currentColor = '#000000';
+    let currentSize = 8;
+
+    // Inicializar Fondo Blanco
+    function initCanvas() {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    }
+    initCanvas();
+
+    // Obtener Coordenadas Exactas
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    // Funciones de Dibujo
+    function startDrawing(e) {
+      e.preventDefault();
+      isDrawing = true;
+      const pos = getPos(e);
+      
+      ctx.strokeStyle = currentColor;
+      ctx.lineWidth = currentSize;
+      
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      if (isDrawing) {
+        isDrawing = false;
+        ctx.beginPath();
+      }
+    }
+
+    // Eventos del Mouse
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    // Eventos Táctiles (Móviles / Tablets)
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+
+    // Funciones de Control
+    function setColor(color, btn) {
+      currentColor = color;
+      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    function setCustomColor(color) {
+      currentColor = color;
+      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+    }
+    function setSize(size, btn) {
+      currentSize = size;
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    function clearCanvas() {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function saveCanvas() {
+      const link = document.createElement('a');
+      link.download = 'mi_dibujo.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>
