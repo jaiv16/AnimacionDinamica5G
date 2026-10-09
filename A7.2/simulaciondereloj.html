@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Simulación de Reloj</title>
+    <style>
+      /* Centrar todo en el medio de la pantalla */
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #1a1a24; /* Color de fondo suave para que destaque el reloj */
+      }
+
+      /* Estilo del Canvas centrado con imagen de fondo */
+      canvas { 
+        background-image: url("reloj.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+
+    <script src="utils.js"></script>
+    <script src="./classes/arrow.js"></script>
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d');
+
+      // Cargar imágenes según los nombres de tu carpeta (A7.2)
+      var hora = new Image();
+      hora.src = "horas.png";
+
+      var minuto = new Image();
+      minuto.src = "minutos.png";
+
+      var segundo = new Image();
+      segundo.src = "segundos.png";
+
+      // Velocidades de rotación proporcionales (grados por frame)
+      var vr3 = 3.0;        // Segundero (velocidad base rápida)
+      var vr2 = vr3 / 60;   // Minutero (60 veces más lento)
+      var vr1 = vr2 / 12;   // Horario (12 veces más lento)
+
+      // Acumuladores de rotación (radianes)
+      var radHoras = 0;
+      var radMinutos = 0;
+      var radSegundos = 0;
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Incrementar las posiciones en radianes
+        radSegundos += vr3 * Math.PI / 180;
+        radMinutos  += vr2 * Math.PI / 180;
+        radHoras    += vr1 * Math.PI / 180;
+
+        // --- MANECILLA HORAS (vr1) ---
+        context.save();
+        context.translate(300, 300);
+        context.rotate(radHoras);
+        context.drawImage(hora, -hora.width / 2, -hora.height / 2);
+        context.restore();
+
+        // --- MANECILLA MINUTOS (vr2) ---
+        context.save();
+        context.translate(300, 300);
+        context.rotate(radMinutos);
+        context.drawImage(minuto, -minuto.width / 2, -minuto.height / 2);
+        context.restore();
+
+        // --- MANECILLA SEGUNDOS (vr3) ---
+        context.save();
+        context.translate(300, 300);
+        context.rotate(radSegundos);
+        context.drawImage(segundo, -segundo.width / 2, -segundo.height / 2);
+        context.restore();
+
+      }());
+    };
+    </script>
+  </body>
+</html>
