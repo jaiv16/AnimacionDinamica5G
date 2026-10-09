@@ -9,6 +9,8 @@
             background-color: cornsilk;
             text-align: center;
             font-family: Verdana;
+            margin: 0;
+            padding: 20px;
         }
 
         h1 {
@@ -19,27 +21,43 @@
             color: royalblue;
         }
 
+        /* Contenedor en cuadrícula de 2 columnas */
         .menu {
             margin: 30px auto;
-            width: 500px;
+            width: 80%;          /* Ancho para ocupar bien el espacio horizontal */
+            max-width: 900px;   /* Ancho máximo razonable */
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+            gap: 15px;          /* Espaciado entre botones */
         }
 
         .actividad {
             background-color: white;
             border: 2px solid coral;
             padding: 15px;
-            margin: 15px;
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .actividad a {
             color: royalblue;
-            font-size: 20px;
+            font-size: 18px;
             text-decoration: none;
+            display: block;
+            width: 100%;
         }
 
         .actividad a:hover {
             color: coral;
+        }
+
+        /* Diseño responsivo para pantallas pequeñas / móviles */
+        @media (max-width: 600px) {
+            .menu {
+                grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
+            }
         }
     </style>
 </head>
@@ -52,56 +70,50 @@
 
     <div class="menu">
 
-        <!-- Actividad 2 -->
+        <!-- Columna Izquierda (primeras 6 actividades) -->
         <div class="actividad">
             <a href="A2/paginabasica.html">
                 Actividad 2 - Página básica
             </a>
         </div>
 
-        <!-- Actividad 3 -->
         <div class="actividad">
             <a href="A3/goldenglobes.html">
                 Actividad 3 - Golden Globes
             </a>
         </div>
 
-        <!-- Actividad 4 -->
         <div class="actividad">
             <a href="A4/artecanvas.html">
                 Actividad 4 - Arte en Canvas
             </a>
         </div>
 
-        <!-- Reto Canvas -->
         <div class="actividad">
             <a href="P2/reto-canvas.html.html">
                 Reto Canvas
             </a>
         </div>
 
-        <!-- Proyecto Interactivo -->
         <div class="actividad">
             <a href="Proyecto1/proyectointeractivo.html">
                 Proyecto Interactivo
             </a>
         </div>
 
-        <!-- rotación de mouse -->
         <div class="actividad">
             <a href="A2.2/rotaciónmouse.html">
                 Animación rotación mouse
             </a>
         </div>
 
-         <!-- animación con onda sinoidal -->
+        <!-- Columna Derecha (siguientes 5 actividades) -->
         <div class="actividad">
             <a href="A3.2/ondasinoidal.html">
                 Animación Onda Sinoidal
             </a>
         </div>
 
-        <!-- reto onda sinoidal -->
         <div class="actividad">
             <a href="A4.2/RetoOndaSinoidal.html">
                 Reto Onda Sinoidal
