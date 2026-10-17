@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulación de Nave - Límites y Fricción</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0b0d17;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: #fff;
+      font-family: sans-serif;
+    }
+    canvas {
+      border: 2px solid #334155;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+      background-color: #05070f;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="canvas" width="800" height="600"></canvas>
+
+  <script src="Navecita.js"></script>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    // Cargar imagen de fondo
+    const fondo = new Image();
+    fondo.src = "Cielo.jpg";
+
+    // Crear instancia de la nave
+    const nave = new Navecita();
+    nave.x = canvas.width / 2;
+    nave.y = canvas.height / 2;
+
+    // Parámetros de física
+    const friction = 0.97;
+    const vr = 0.08;
+    const thrust = 0.25;
+
+    // Controles de teclado
+    const keys = {
+      ArrowLeft: false,
+      ArrowRight: false,
+      ArrowUp: false
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key in keys) keys[e.key] = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key in keys) keys[e.key] = false;
+    });
+
+    // Fondo alternativo por si falla la imagen
+    function drawFallbackBackground() {
+      let grad = context.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, 50,
+        canvas.width / 2, canvas.height / 2, canvas.width
+      );
+      grad.addColorStop(0, '#1a102f');
+      grad.addColorStop(1, '#05070f');
+      context.fillStyle = grad;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      context.fillStyle = "#ffffff";
+      context.fillRect(100, 100, 2, 2);
+      context.fillRect(300, 400, 3, 3);
+      context.fillRect(600, 150, 2, 2);
+      context.fillRect(700, 500, 2, 2);
+    }
+
+    // Bucle de animación
+    function drawFrame() {
+      window.requestAnimationFrame(drawFrame);
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Fondo
+      if (fondo.complete && fondo.width > 0) {
+        context.drawImage(fondo, 0, 0, canvas.width, canvas.height);
+      } else {
+        drawFallbackBackground();
+      }
+
+      // 2. Controles (Giro y Aceleración)
+      if (keys.ArrowLeft) {
+        nave.rotation -= vr;
+      }
+      if (keys.ArrowRight) {
+        nave.rotation += vr;
+      }
+      if (keys.ArrowUp) {
+        let ax = Math.cos(nave.rotation) * thrust;
+        let ay = Math.sin(nave.rotation) * thrust;
+        nave.vx += ax;
+        nave.vy += ay;
+        nave.showFlame = true;
+      } else {
+        nave.showFlame = false;
+      }
+
+      // 3. Fricción
+      nave.vx *= friction;
+      nave.vy *= friction;
+
+      // 4. Posición
+      nave.x += nave.vx;
+      nave.y += nave.vy;
+
+      // 5. Límites (Screen Wrap)
+      if (nave.x > canvas.width) {
+        nave.x = 0;
+      } else if (nave.x < 0) {
+        nave.x = canvas.width;
+      }
+
+      if (nave.y > canvas.height) {
+        nave.y = 0;
+      } else if (nave.y < 0) {
+        nave.y = canvas.height;
+      }
+
+      // 6. Dibujar nave
+      nave.draw(context);
+    }
+
+    drawFrame();
+  </script>
+</body>
+</html>
