@@ -79,6 +79,19 @@
       context.fillRect(700, 500, 2, 2);
     }
 
+    // Dibujar las instrucciones en pantalla
+    function drawInstructions() {
+      context.save();
+      context.fillStyle = "rgba(255, 255, 255, 0.8)";
+      context.font = "14px sans-serif";
+      context.fillText("Controles:", 15, 25);
+      context.font = "12px sans-serif";
+      context.fillStyle = "rgba(255, 255, 255, 0.6)";
+      context.fillText("↑ : Avanzar", 15, 43);
+      context.fillText("← / → : Rotar nave", 15, 59);
+      context.restore();
+    }
+
     // Bucle de animación
     function drawFrame() {
       window.requestAnimationFrame(drawFrame);
@@ -129,8 +142,9 @@
         nave.y = canvas.height;
       }
 
-      // 6. Dibujar nave
+      // 6. Dibujar nave e instrucciones
       nave.draw(context);
+      drawInstructions();
     }
 
     drawFrame();
